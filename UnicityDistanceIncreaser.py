@@ -22,7 +22,6 @@ def Encrypt(textFile, parametersFile="coder_parameters.txt", encryptedFile="encr
     textForTransform = file.read(255)
     file.close()
 
-    print(textForTransform)
     l1 = float(len(textForTransform))
     #compress
     compressedText = zlib.compress(textForTransform)
@@ -61,8 +60,6 @@ def Encrypt(textFile, parametersFile="coder_parameters.txt", encryptedFile="encr
     print("Text has increased in " + str(float(l3)/l1) + " times")
     print("Compress coef (alpha) = " + str(alpha))
     print("Reed Solomone code parameters: t = " + str(t) + ", N = " + str(min(255, int(l2)+2*t+1)) + ", K = " + str(int(l2)))
-
-    print(textWithError)
 
     if alpha > 1.0:
         return textForTransform
@@ -121,9 +118,7 @@ def EncryptText(textForTransform, parametersFile="coder_parameters.txt", encrypt
     #some results
     print("Text has increased in " + str(float(l3)/l1) + " times")
     print("Compress coef (alpha) = " + str(alpha))
-    print("Reed Solomone code parameters: t = " + str(t) + ", N = " + str(min(255, int(l2)+2*t+1)) + ", K = " + str(int(l2)))
-
-    print(textWithError)
+    print("Reed-Solomone code parameters: t = " + str(t) + ", N = " + str(min(255, int(l2)+2*t+1)) + ", K = " + str(int(l2)))
 
     if alpha > 1.0:
         return textForTransform

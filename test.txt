@@ -1,0 +1,1 @@
+Before moving on to Reed Solomon codes, we need to define several operations on polynomials whose coefficients are Galois field elements.

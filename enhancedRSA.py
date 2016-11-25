@@ -2,6 +2,7 @@ import rsa
 import UnicityDistanceIncreaser
 
 def encrypt(message, public_key):
+	message = UnicityDistanceIncreaser.EncryptText(message)
 	strs = []; i = 0; crypto = []
 	
 	while i < (len(message)):
@@ -13,11 +14,10 @@ def encrypt(message, public_key):
 
 	return crypto
 
-def decrypt(message, private_key):
+def decrypt(crypto, private_key):
 	recvMessage = []; decrRecvMessage = ""
-	
-	for i in range(len(message)):
-		recvMessage.append(rsa.decrypt(message[i], private_key))
+	for i in range(len(crypto)):
+		recvMessage.append(rsa.decrypt(crypto[i], private_key))
 		decrRecvMessage += recvMessage[i]
 
 	result = UnicityDistanceIncreaser.DecryptText(decrRecvMessage)
