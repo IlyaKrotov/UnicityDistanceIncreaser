@@ -2,7 +2,7 @@ import rsa
 import UnicityDistanceIncreaser
 
 def encrypt(message, public_key):
-	message = UnicityDistanceIncreaser.EncryptText(message)
+	message, isCompressed = UnicityDistanceIncreaser.EncryptText(message)
 	strs = []; i = 0; crypto = []
 	
 	while i < (len(message)):
@@ -12,7 +12,7 @@ def encrypt(message, public_key):
 	for i in range(len(strs)):
 		crypto.append(rsa.encrypt(strs[i], public_key))
 
-	return crypto
+	return crypto, isCompressed
 
 def decrypt(crypto, private_key):
 	recvMessage = []; decrRecvMessage = ""
@@ -23,6 +23,22 @@ def decrypt(crypto, private_key):
 	result = UnicityDistanceIncreaser.DecryptText(decrRecvMessage)
 
 	return result
+
+
+def codeParamsEncrypt(paramsFile="coder_parameters.txt", public_key)):
+	params = rsa.encrypt(UnicityDistanceIncreaser.CodeParameters(paramsFile), public_key)
+	return params
+
+
+def codeParamsDecrypt(encryptedParameters, private_key, parametersFile="coder_parameters.txt"):
+	paramsString = rsa.decrypt(encryptedParameters, private_key)
+	params = paramsString.split(" ")
+
+	paramsFile = open(parametersFile, "w")
+    paramsFile.write(paramsString)
+    paramsFile.close()
+
+	return params
 
 def newkeys(n):
 	return rsa.newkeys(n)

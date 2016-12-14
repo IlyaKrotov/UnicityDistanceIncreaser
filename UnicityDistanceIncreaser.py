@@ -1,5 +1,5 @@
 import unireedsolomon.rs as rs
-import zlib
+import zlib, lzw
 import math
 import random
 
@@ -23,10 +23,17 @@ def Encrypt(textFile, parametersFile="coder_parameters.txt", encryptedFile="encr
     file.close()
 
     l1 = float(len(textForTransform))
-    #compress
+    #first method compression
     compressedText = zlib.compress(textForTransform)
     l2 = float(len(compressedText))
     alpha = l2/l1
+
+    #second method compression
+    textForTransform2 = lzw.readbytes(textFile)
+    compressedText2 = lzw.compress(textForTransform2)
+    alpha2 = len(compressedText2) / len(textForTransform2)
+
+    alpha = alpha if alpha < alpha2 else alpha2
 
     t = 0
     for i in range(int(l2)):
@@ -61,10 +68,13 @@ def Encrypt(textFile, parametersFile="coder_parameters.txt", encryptedFile="encr
     print("Compress coef (alpha) = " + str(alpha))
     print("Reed Solomone code parameters: t = " + str(t) + ", N = " + str(min(255, int(l2)+2*t+1)) + ", K = " + str(int(l2)))
 
+    isCompressed = False
+
     if alpha > 1.0:
-        return textForTransform
+        return textForTransform, isCompressed
     else:
-        return textWithError
+        isCompressed = True
+        return textWithError, isCompressed
 
 def Decrypt(encryptedFile="encrypted.txt", paramsFile="coder_parameters.txt"):
     encrFile = open(encryptedFile, "rb")
@@ -78,6 +88,15 @@ def Decrypt(encryptedFile="encrypted.txt", paramsFile="coder_parameters.txt"):
 
     decodedText = coder.decode(textForDecrypt)
     decompressedText = zlib.decompress(decodedText[0])
+
+def CodeParameters(paramsFile="coder_parameters.txt"):
+    paramsFile = open(paramsFile, "rb")
+    parameters = [int(line) for line in paramsFile]
+    
+    params = str(parameters[0]) + " " + str(parameters[1])
+    paramsFile.close()
+
+    return params
 
 def EncryptText(textForTransform, parametersFile="coder_parameters.txt", encryptedFile="encrypted.txt"):
     print(textForTransform)
